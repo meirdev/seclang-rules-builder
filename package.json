@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:wasm": "cd ../wasm && GOOS=js GOARCH=wasm go build -tags no_fs_access -o ../seclang-rules-builder/public/seclang.wasm . && cp \"$(go env GOROOT)/lib/wasm/wasm_exec.js\" ../seclang-rules-builder/public/wasm_exec.js",
-    "build": "bun run build:wasm && tsc -b && vite build",
+    "build:wasm": "cd ./wasm && GOOS=js GOARCH=wasm go build -tags no_fs_access -o ../public/seclang.wasm . && cp \"$(go env GOROOT)/lib/wasm/wasm_exec.js\" ../public/wasm_exec.js",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "bunx --bun @biomejs/biome format --write"
