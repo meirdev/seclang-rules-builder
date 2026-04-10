@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:wasm": "cd ./wasm && GOOS=js GOARCH=wasm go build -tags no_fs_access -o ../public/seclang.wasm . && cp \"$(go env GOROOT)/lib/wasm/wasm_exec.js\" ../public/wasm_exec.js",
+    "build:wasm": "cd ./wasm && GOOS=js GOARCH=wasm go build -trimpath -ldflags='-s -w' -tags 'no_fs_access,coraza.disabled_operators.geoLookup,coraza.disabled_operators.ipMatchFromDataset,coraza.disabled_operators.ipMatchFromFile,coraza.disabled_operators.pmFromDataset,coraza.disabled_operators.pmFromFile,coraza.disabled_operators.restpath,coraza.disabled_operators.noMatch,coraza.disabled_operators.unconditionalMatch,coraza.disabled_operators.validateByteRange,coraza.disabled_operators.validateNid,coraza.disabled_operators.validateUrlEncoding,coraza.disabled_operators.validateUtf8Encoding,coraza.disabled_operators.inspectFile,coraza.disabled_operators.rbl,coraza.disabled_operators.validateSchema' -o ../public/seclang.wasm . && cp \"$(go env GOROOT)/lib/wasm/wasm_exec.js\" ../public/wasm_exec.js && (command -v wasm-opt >/dev/null && wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int --enable-sign-ext ../public/seclang.wasm -o ../public/seclang.wasm || echo 'wasm-opt not found, skipping optimization')",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "bun run build && wrangler dev",

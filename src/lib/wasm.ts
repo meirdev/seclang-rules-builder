@@ -1,8 +1,4 @@
 export interface WasmAPI {
-  convertToSecLang(
-    dnfJSON: string,
-    baseId?: number,
-  ): { rules: string[]; errors: string[] };
   validateSecLang(rule: string): { valid: boolean; error?: string };
 }
 
@@ -11,7 +7,6 @@ declare global {
     importObject: WebAssembly.Imports;
     run(instance: WebAssembly.Instance): Promise<void>;
   }
-  function convertToSecLang(dnfJSON: string, baseId?: number): string;
   function validateSecLang(rule: string): string;
 }
 
@@ -30,10 +25,6 @@ export function initWasm(): Promise<WasmAPI> {
     go.run(result.instance);
 
     return {
-      convertToSecLang(dnfJSON: string, baseId = 1000) {
-        const raw = globalThis.convertToSecLang(dnfJSON, baseId);
-        return JSON.parse(raw);
-      },
       validateSecLang(rule: string) {
         const raw = globalThis.validateSecLang(rule);
         return JSON.parse(raw);
