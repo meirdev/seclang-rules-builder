@@ -31,7 +31,63 @@ export interface FieldDef {
   placeholder?: string;
   namePlaceholder?: string;
   enumValues?: string[]; // predefined values for enum-typed fields
+  nameOptions?: string[]; // suggested values for the name input (autocomplete)
 }
+
+export const COMMON_REQUEST_HEADERS = [
+  "Accept",
+  "Accept-Charset",
+  "Accept-Encoding",
+  "Accept-Language",
+  "Authorization",
+  "Cache-Control",
+  "Connection",
+  "Content-Length",
+  "Content-Type",
+  "Cookie",
+  "Host",
+  "If-Modified-Since",
+  "If-None-Match",
+  "Origin",
+  "Pragma",
+  "Referer",
+  "User-Agent",
+  "X-Forwarded-For",
+  "X-Forwarded-Host",
+  "X-Forwarded-Proto",
+  "X-Real-IP",
+  "X-Requested-With",
+];
+
+export const COMMON_RESPONSE_HEADERS = [
+  "Access-Control-Allow-Credentials",
+  "Access-Control-Allow-Headers",
+  "Access-Control-Allow-Methods",
+  "Access-Control-Allow-Origin",
+  "Access-Control-Expose-Headers",
+  "Access-Control-Max-Age",
+  "Cache-Control",
+  "Content-Disposition",
+  "Content-Encoding",
+  "Content-Language",
+  "Content-Length",
+  "Content-Type",
+  "Date",
+  "ETag",
+  "Expires",
+  "Last-Modified",
+  "Location",
+  "Pragma",
+  "Server",
+  "Set-Cookie",
+  "Strict-Transport-Security",
+  "Transfer-Encoding",
+  "Vary",
+  "WWW-Authenticate",
+  "X-Content-Type-Options",
+  "X-Frame-Options",
+  "X-XSS-Protection",
+];
 
 export interface OperatorDef {
   key: string; // SecLang operator, e.g. "@streq", "!@rx"
@@ -61,6 +117,28 @@ export const COUNTRY_CODES: CountryDef[] = Object.entries(
 )
   .map(([code, name]) => ({ code, name, flag: toFlag(code) }))
   .sort((a, b) => a.name.localeCompare(b.name));
+
+const CONTINENTS = ["AF", "AN", "AS", "EU", "NA", "OC", "SA"];
+
+const HTTP_METHODS = [
+  "GET",
+  "POST",
+  "PUT",
+  "DELETE",
+  "PATCH",
+  "HEAD",
+  "OPTIONS",
+  "CONNECT",
+  "TRACE",
+];
+
+const HTTP_PROTOCOLS = [
+  "HTTP/0.9",
+  "HTTP/1.0",
+  "HTTP/1.1",
+  "HTTP/2.0",
+  "HTTP/3.0",
+];
 
 export const FIELDS: FieldDef[] = [
   {
@@ -119,7 +197,7 @@ export const FIELDS: FieldDef[] = [
     group: "Geo",
     hasName: false,
     placeholder: "e.g. EU",
-    enumValues: ["AF", "AN", "AS", "EU", "NA", "OC", "SA"],
+    enumValues: CONTINENTS,
   },
   {
     key: "GEO:COUNTRY_CODE",
@@ -186,17 +264,7 @@ export const FIELDS: FieldDef[] = [
     fieldType: "enum",
     hasName: false,
     placeholder: "e.g. POST",
-    enumValues: [
-      "GET",
-      "POST",
-      "PUT",
-      "DELETE",
-      "PATCH",
-      "HEAD",
-      "OPTIONS",
-      "CONNECT",
-      "TRACE",
-    ],
+    enumValues: HTTP_METHODS,
   },
   {
     key: "REQUEST_PROTOCOL",
@@ -205,7 +273,7 @@ export const FIELDS: FieldDef[] = [
     fieldType: "enum",
     hasName: false,
     placeholder: "e.g. HTTP/1.1",
-    enumValues: ["HTTP/0.9", "HTTP/1.0", "HTTP/1.1", "HTTP/2.0", "HTTP/3.0"],
+    enumValues: HTTP_PROTOCOLS,
   },
   {
     key: "REQUEST_URI",
@@ -260,7 +328,8 @@ export const FIELDS: FieldDef[] = [
     phase: Phase.REQUEST_HEADERS,
     fieldType: "string",
     hasName: true,
-    namePlaceholder: "e.g. content-type",
+    namePlaceholder: "e.g. Content-Type",
+    nameOptions: COMMON_REQUEST_HEADERS,
   },
   {
     key: "REQUEST_HEADERS_NAMES",
@@ -396,7 +465,7 @@ export const FIELDS: FieldDef[] = [
     phase: Phase.RESPONSE_HEADERS,
     fieldType: "enum",
     hasName: false,
-    enumValues: ["HTTP/0.9", "HTTP/1.0", "HTTP/1.1", "HTTP/2.0", "HTTP/3.0"],
+    enumValues: HTTP_PROTOCOLS,
   },
   {
     key: "RESPONSE_HEADERS",
@@ -404,7 +473,8 @@ export const FIELDS: FieldDef[] = [
     phase: Phase.RESPONSE_HEADERS,
     fieldType: "string",
     hasName: true,
-    namePlaceholder: "e.g. content-type",
+    namePlaceholder: "e.g. Content-Type",
+    nameOptions: COMMON_RESPONSE_HEADERS,
   },
   {
     key: "RESPONSE_HEADERS_NAMES",
