@@ -13,7 +13,56 @@ import {
 } from "@/components/ui/input-group";
 import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react";
 
-const Combobox = ComboboxPrimitive.Root;
+const FREE_SOLO_INPUT_REASONS = new Set([
+  "input-change",
+  "input-paste",
+  "item-press",
+]);
+
+function Combobox<Value, Multiple extends boolean | undefined = false>({
+  freeSolo,
+  onInputValueChange,
+  onOpenChange,
+  ...props
+}: ComboboxPrimitive.Root.Props<Value, Multiple> & {
+  freeSolo?: boolean;
+}) {
+  const freeSoloRef = React.useRef("");
+
+  const handleInputValueChange = React.useCallback(
+    (value: string, details: { reason: string }) => {
+      if (freeSolo) {
+        if (FREE_SOLO_INPUT_REASONS.has(details.reason)) {
+          freeSoloRef.current = value;
+          onInputValueChange?.(value, details as never);
+        }
+      } else {
+        onInputValueChange?.(value, details as never);
+      }
+    },
+    [freeSolo, onInputValueChange],
+  );
+
+  const handleOpenChange = React.useCallback(
+    (open: boolean, details: { reason: string }) => {
+      if (freeSolo && !open) {
+        onInputValueChange?.(freeSoloRef.current, details as never);
+      }
+      onOpenChange?.(open, details as never);
+    },
+    [freeSolo, onInputValueChange, onOpenChange],
+  );
+
+  return (
+    <ComboboxPrimitive.Root
+      {...(props as ComboboxPrimitive.Root.Props<Value, Multiple>)}
+      onInputValueChange={
+        onInputValueChange ? handleInputValueChange : undefined
+      }
+      onOpenChange={handleOpenChange}
+    />
+  );
+}
 
 function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props) {
   return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />;
