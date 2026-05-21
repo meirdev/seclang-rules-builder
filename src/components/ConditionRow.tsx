@@ -150,7 +150,39 @@ export function ConditionRow({
       </Combobox>
 
       {/* Name input (only for fields with hasName) */}
-      {fieldDef?.hasName && (
+      {fieldDef?.hasName && fieldDef.nameOptions ? (
+        <Combobox
+          freeSolo
+          items={fieldDef.nameOptions}
+          inputValue={condition.name ?? ""}
+          value={
+            fieldDef.nameOptions.includes(condition.name ?? "")
+              ? condition.name!
+              : null
+          }
+          onValueChange={(val) => {
+            if (val) onUpdate(groupIndex, condIndex, { name: val as string });
+          }}
+          onInputValueChange={(val) => {
+            onUpdate(groupIndex, condIndex, { name: val });
+          }}
+        >
+          <ComboboxInput
+            placeholder={fieldDef.namePlaceholder ?? "Name"}
+            className="w-full sm:w-45"
+          />
+          <ComboboxContent>
+            <ComboboxEmpty>No headers found.</ComboboxEmpty>
+            <ComboboxList>
+              {(header: string) => (
+                <ComboboxItem key={header} value={header}>
+                  {header}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      ) : fieldDef?.hasName ? (
         <Input
           className="w-full sm:w-35"
           value={condition.name ?? ""}
@@ -159,7 +191,7 @@ export function ConditionRow({
           }
           placeholder={fieldDef.namePlaceholder ?? "Name"}
         />
-      )}
+      ) : null}
 
       {/* Operator select */}
       <Select
