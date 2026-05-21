@@ -88,13 +88,6 @@ export const FIELDS: FieldDef[] = [
     placeholder: "e.g. 443",
   },
   {
-    key: "REMOTE_USER",
-    label: "Authenticated User",
-    phase: Phase.REQUEST_HEADERS,
-    fieldType: "string",
-    hasName: false,
-  },
-  {
     key: "SERVER_ADDR",
     label: "Server IP",
     phase: Phase.REQUEST_HEADERS,
